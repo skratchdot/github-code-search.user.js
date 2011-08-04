@@ -25,15 +25,15 @@ pages which allows you to search the code in that repository.
 
 ### Screenshots ###
 
-Before installing the user script:  
+#### Before installing the user script: ####
   
 ![Screenshot 1](https://github.com/skratchdot/github-code-search.user.js/raw/master/images/screen1.gif)
   
-After installing the user script:  
+#### After installing the user script: ####
   
 ![Screenshot 2](https://github.com/skratchdot/github-code-search.user.js/raw/master/images/screen2.gif)
   
-After installing the user script, and performing a search:  
+#### After installing the user script, and performing a search: ####
   
 ![Screenshot 3](https://github.com/skratchdot/github-code-search.user.js/raw/master/images/screen3.gif)
   
