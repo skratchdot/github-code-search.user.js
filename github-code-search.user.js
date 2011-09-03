@@ -9,6 +9,18 @@ var main = function () {
 	// Declare a namespace to store functions in
 	var SKRATCHDOT = SKRATCHDOT || {};
 
+	// GitHub.nameWithOwner used to exist on the page, but was removed.
+	// Now constructing this with some jQuery selectors
+	SKRATCHDOT.nameWithOwner = '';
+	SKRATCHDOT.getNameWithOwner = function () {
+		var returnValue = '',
+			repoLink = jQuery('div#main div.site div.title-actions-bar h1:first a:eq(1)');
+		if (repoLink.length > 0) {
+			returnValue = repoLink.attr('href').substr(1);
+		}
+		return returnValue;
+	};
+
 	// The function that will be called when repo search is used
 	SKRATCHDOT.performCodeSearch = function (searchText, startValue) {
 		jQuery.ajax({
@@ -17,7 +29,7 @@ var main = function () {
 			type: 'GET',
 			data: {
 				type: 'Code',
-				repo: GitHub.nameWithOwner,
+				repo: SKRATCHDOT.nameWithOwner,
 				q: searchText,
 				start_value: startValue
 			},
@@ -44,7 +56,8 @@ var main = function () {
 	SKRATCHDOT.codeSearchInit = function () {
 		var site = jQuery('div#main div.site');
 		var repohead = site.find('div.repohead');
-		if (repohead.length > 0 && typeof GitHub.nameWithOwner === 'string' && GitHub.nameWithOwner.length > 0) {
+		SKRATCHDOT.nameWithOwner = SKRATCHDOT.getNameWithOwner();
+		if (repohead.length > 0 && typeof SKRATCHDOT.nameWithOwner === 'string' && SKRATCHDOT.nameWithOwner.length > 0) {
 			var subnavBar = repohead.find('div.subnav-bar');
 
 			// Create Search Bar
