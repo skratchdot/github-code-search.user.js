@@ -58,24 +58,45 @@ var main = function () {
 		var repohead = site.find('div.repohead');
 		SKRATCHDOT.nameWithOwner = SKRATCHDOT.getNameWithOwner();
 		if (repohead.length > 0 && typeof SKRATCHDOT.nameWithOwner === 'string' && SKRATCHDOT.nameWithOwner.length > 0) {
+			// Do nothing if code tab isn't selected
+			var codeTabSelected = repohead.find('ul.tabs li:first a.selected');
+			if (codeTabSelected.length === 0) {
+				return;
+			}
+
 			var subnavBar = repohead.find('div.subnav-bar');
+			var actions = subnavBar.find('ul.actions');
+			
+			// Do nothing if there's already a search box
+			if (actions.find('input[type=text]').length > 1) {
+				return;
+			}
 
 			// Create Search Bar
-			subnavBar.append(
-				jQuery('<form />')
+			actions.prepend(
+				jQuery('<li />')
+				.attr('class', 'search')
+				.append(
+					jQuery('<form />')
 					.attr('id', 'skratchdot-code-search')
 					.attr('method', 'get')
 					.attr('action', 'search')
 					.append(
-						jQuery('<input />')
+						jQuery('<span />')
+						.attr('class', 'fieldwrap')
+						.append(
+							jQuery('<input />')
 							.attr('type', 'text')
-							.attr('placeholder', 'Search Code...')
-							.css('float', 'right')
-							.css('padding', '3px')
-							.css('border-width', '1px')
-							.css('border-style', 'solid')
-							.css('border-radius', '3px')
+							.attr('placeholder', 'Search Source Code...')
+						)
+						.append(
+							jQuery('<button />')
+							.attr('class', 'minibutton')
+							.attr('type', 'submit')
+							.append('<span>Search</span>')
+						)
 					)
+				)
 			);
 
 			// When a search is performed
