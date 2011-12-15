@@ -14,7 +14,7 @@ var main = function () {
 	SKRATCHDOT.nameWithOwner = '';
 	SKRATCHDOT.getNameWithOwner = function () {
 		var returnValue = '',
-			repoLink = jQuery('div#main div.site div.title-actions-bar h1:first a:eq(1)');
+			repoLink = jQuery('div.site div.title-actions-bar h1:first a:eq(1)');
 		if (repoLink.length > 0) {
 			returnValue = repoLink.attr('href').substr(1);
 		}
@@ -54,8 +54,8 @@ var main = function () {
 	};
 
 	SKRATCHDOT.codeSearchInit = function () {
-		var site = jQuery('div#main div.site');
-		var repohead = site.find('div.repohead');
+		var siteContainer = jQuery('div.site div.container');
+		var repohead = siteContainer.find('div.repohead');
 		SKRATCHDOT.nameWithOwner = SKRATCHDOT.getNameWithOwner();
 		if (repohead.length > 0 && typeof SKRATCHDOT.nameWithOwner === 'string' && SKRATCHDOT.nameWithOwner.length > 0) {
 			// Do nothing if code tab isn't selected
@@ -115,14 +115,14 @@ var main = function () {
 						}
 					}
 				});
-				site.children().each(function() {
+				siteContainer.children().each(function() {
 					var elem = jQuery(this);
 					if (elem.hasClass('repohead') === false) {
 						elem.remove();
 					}
 				});
 
-				site.append('<div id="skratchdot-result-container"></div>');
+				siteContainer.append('<div id="skratchdot-result-container"></div>');
 				// Only perform search if we entered a value
 				var searchText = jQuery(this).find('input:first').val();
 				if( searchText.length > 0 ) {
