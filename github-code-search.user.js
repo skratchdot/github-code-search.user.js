@@ -24,7 +24,7 @@ var main = function () {
 	// The function that will be called when repo search is used
 	SKRATCHDOT.performCodeSearch = function (searchText, startValue) {
 		jQuery.ajax({
-			url: 'https://github.com/search',
+			url: '/search',
 			dataType: 'html',
 			type: 'GET',
 			data: {
