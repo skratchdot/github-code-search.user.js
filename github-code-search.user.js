@@ -3,11 +3,21 @@
 // @namespace      https://github.com/skratchdot/github-code-search.user.js
 // @description    A user script that adds a search box to repository pages which allows you to search the code in that repository.
 // @include        https://github.com/*
+// @match          https://github.com/*
+// @run-at         document-end
+// @icon           http://skratchdot.com/favicon.ico
+// @downloadURL    https://github.com/skratchdot/github-code-search.user.js/raw/master/github-code-search.user.js
+// @updateURL      https://github.com/skratchdot/github-code-search.user.js/raw/master/github-code-search.user.js
+// @version        1.0
 // ==/UserScript==
+/*global jQuery */
+/*jslint browser: true */
 
 var main = function () {
+	'use strict';
+
 	// Declare a namespace to store functions in
-	var SKRATCHDOT = SKRATCHDOT || {};
+	var SKRATCHDOT = window.SKRATCHDOT || {};
 
 	// GitHub.nameWithOwner used to exist on the page, but was removed.
 	// Now constructing this with some jQuery selectors
@@ -33,13 +43,13 @@ var main = function () {
 				q: searchText,
 				start_value: startValue
 			},
-			success: function(data, textStatus, XMLHttpRequest) {
+			success: function (data) {
 				try {
-					var resultHtml = jQuery(data).find('#code_search_results');
-					var resultContainer = jQuery('#skratchdot-result-container');
+					var resultHtml = jQuery(data).find('#code_search_results'),
+						resultContainer = jQuery('#skratchdot-result-container');
 					resultContainer.html(resultHtml);
 
-					resultContainer.find('#code_search_results div.pagination a.pager_link').click(function(e) {
+					resultContainer.find('#code_search_results div.pagination a.pager_link').click(function (e) {
 
 						resultContainer.empty();
 
@@ -48,25 +58,28 @@ var main = function () {
 
 						e.preventDefault();
 					});
-				} catch(e) {}
+				} catch (e) {}
 			}
 		});
 	};
 
 	SKRATCHDOT.codeSearchInit = function () {
-		var siteContainer = jQuery('div.site div.container');
-		var repohead = siteContainer.find('div.repohead');
+		var siteContainer = jQuery('div.site div.container'),
+			repohead = siteContainer.find('div.repohead'),
+			codeTabSelected,
+			subnavBar,
+			actions;
 		SKRATCHDOT.nameWithOwner = SKRATCHDOT.getNameWithOwner();
 		if (repohead.length > 0 && typeof SKRATCHDOT.nameWithOwner === 'string' && SKRATCHDOT.nameWithOwner.length > 0) {
 			// Do nothing if code tab isn't selected
-			var codeTabSelected = repohead.find('ul.tabs li:first a.selected');
+			codeTabSelected = repohead.find('ul.tabs li:first a.selected');
 			if (codeTabSelected.length === 0) {
 				return;
 			}
 
-			var subnavBar = repohead.find('div.subnav-bar');
-			var actions = subnavBar.find('ul.actions');
-			
+			subnavBar = repohead.find('div.subnav-bar');
+			actions = subnavBar.find('ul.actions');
+
 			// Do nothing if there's already a search box
 			if (actions.find('input[type=text]').length > 1) {
 				return;
@@ -75,37 +88,40 @@ var main = function () {
 			// Create Search Bar
 			actions.prepend(
 				jQuery('<li />')
-				.attr('class', 'search')
-				.append(
-					jQuery('<form />')
-					.attr('id', 'skratchdot-code-search')
-					.attr('method', 'get')
-					.attr('action', 'search')
+					.attr('class', 'search')
 					.append(
-						jQuery('<span />')
-						.attr('class', 'fieldwrap')
-						.append(
-							jQuery('<input />')
-							.attr('type', 'text')
-							.attr('placeholder', 'Search Source Code...')
-						)
-						.append(
-							jQuery('<button />')
-							.attr('class', 'minibutton')
-							.attr('type', 'submit')
-							.append('<span>Search</span>')
-						)
+						jQuery('<form />')
+							.attr('id', 'skratchdot-code-search')
+							.attr('method', 'get')
+							.attr('action', 'search')
+							.append(
+								jQuery('<span />')
+									.attr('class', 'fieldwrap')
+									.append(
+										jQuery('<input />')
+											.attr('type', 'text')
+											.attr('placeholder', 'Search Source Code...')
+									)
+									.append(
+										jQuery('<button />')
+											.attr('class', 'minibutton')
+											.attr('type', 'submit')
+											.append('<span>Search</span>')
+									)
+							)
 					)
-				)
 			);
 
 			// When a search is performed
-			jQuery('#skratchdot-code-search').submit(function(e) {
+			jQuery('#skratchdot-code-search').submit(function (e) {
+				var belowSubNav = false,
+					searchText = jQuery(this).find('input:first').val();
+
 				e.preventDefault();
-				
+
 				// Remove everything after the subnavBar
-				var belowSubNav = false;
-				repohead.children().each(function() {
+				belowSubNav = false;
+				repohead.children().each(function () {
 					var elem = jQuery(this);
 					if (belowSubNav === true) {
 						elem.remove();
@@ -115,7 +131,7 @@ var main = function () {
 						}
 					}
 				});
-				siteContainer.children().each(function() {
+				siteContainer.children().each(function () {
 					var elem = jQuery(this);
 					if (elem.hasClass('repohead') === false) {
 						elem.remove();
@@ -123,21 +139,20 @@ var main = function () {
 				});
 
 				siteContainer.append('<div id="skratchdot-result-container"></div>');
+
 				// Only perform search if we entered a value
-				var searchText = jQuery(this).find('input:first').val();
-				if( searchText.length > 0 ) {
+				if (searchText.length > 0) {
 					SKRATCHDOT.performCodeSearch(searchText, 1);
-				}
-				else {
+				} else {
 					jQuery('#skratchdot-result-container').html('<div style="color:#c00;">Please enter a search term into the code search input, and try again.</div>');
 				}
-				
+
 			});
 		}
 	};
 
 	// onDomReady : setup our page
-	jQuery(document).ready(function() {
+	jQuery(document).ready(function () {
 		SKRATCHDOT.codeSearchInit();
 	});
 };
