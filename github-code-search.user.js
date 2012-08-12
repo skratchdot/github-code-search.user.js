@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name           Github Code Search
+// @name           Github: Code Search
 // @namespace      https://github.com/skratchdot/github-code-search.user.js
 // @description    A user script that adds a search box to repository pages which allows you to search the code in that repository.
 // @include        https://github.com/*
@@ -8,7 +8,7 @@
 // @icon           http://skratchdot.com/favicon.ico
 // @downloadURL    https://github.com/skratchdot/github-code-search.user.js/raw/master/github-code-search.user.js
 // @updateURL      https://github.com/skratchdot/github-code-search.user.js/raw/master/github-code-search.user.js
-// @version        1.0
+// @version        1.1
 // ==/UserScript==
 /*global jQuery */
 /*jslint browser: true */
