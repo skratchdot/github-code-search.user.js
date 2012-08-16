@@ -8,7 +8,7 @@
 // @icon           http://skratchdot.com/favicon.ico
 // @downloadURL    https://github.com/skratchdot/github-code-search.user.js/raw/master/github-code-search.user.js
 // @updateURL      https://github.com/skratchdot/github-code-search.user.js/raw/master/github-code-search.user.js
-// @version        1.1
+// @version        1.2
 // ==/UserScript==
 /*global jQuery */
 /*jslint browser: true */
@@ -66,27 +66,26 @@ var main = function () {
 	SKRATCHDOT.codeSearchInit = function () {
 		var siteContainer = jQuery('div.site div.container'),
 			repohead = siteContainer.find('div.repohead'),
+			jsRepoPjaxContainer = jQuery('#js-repo-pjax-container'),
 			codeTabSelected,
-			subnavBar,
-			actions;
+			tabsOnRight;
 		SKRATCHDOT.nameWithOwner = SKRATCHDOT.getNameWithOwner();
 		if (repohead.length > 0 && typeof SKRATCHDOT.nameWithOwner === 'string' && SKRATCHDOT.nameWithOwner.length > 0) {
 			// Do nothing if code tab isn't selected
-			codeTabSelected = repohead.find('ul.tabs li:first a.selected');
+			codeTabSelected = repohead.find('div.tabnav > ul.tabnav-tabs li:first a.selected');
 			if (codeTabSelected.length === 0) {
 				return;
 			}
 
-			subnavBar = repohead.find('div.subnav-bar');
-			actions = subnavBar.find('ul.actions');
+			tabsOnRight = repohead.find('div.tabnav > .tabnav-right ul');
 
 			// Do nothing if there's already a search box
-			if (actions.find('input[type=text]').length > 1) {
+			if (tabsOnRight.find('input[type=text]').length > 1) {
 				return;
 			}
 
 			// Create Search Bar
-			actions.prepend(
+			tabsOnRight.prepend(
 				jQuery('<li />')
 					.attr('class', 'search')
 					.append(
@@ -114,31 +113,12 @@ var main = function () {
 
 			// When a search is performed
 			jQuery('#skratchdot-code-search').submit(function (e) {
-				var belowSubNav = false,
-					searchText = jQuery(this).find('input:first').val();
+				var searchText = jQuery(this).find('input:first').val();
 
 				e.preventDefault();
 
-				// Remove everything after the subnavBar
-				belowSubNav = false;
-				repohead.children().each(function () {
-					var elem = jQuery(this);
-					if (belowSubNav === true) {
-						elem.remove();
-					} else {
-						if (elem.hasClass('subnav-bar')) {
-							belowSubNav = true;
-						}
-					}
-				});
-				siteContainer.children().each(function () {
-					var elem = jQuery(this);
-					if (elem.hasClass('repohead') === false) {
-						elem.remove();
-					}
-				});
-
-				siteContainer.append('<div id="skratchdot-result-container"></div>');
+				// Clear our ajax container, and get ready to store search results
+				jsRepoPjaxContainer.empty().append('<div id="skratchdot-result-container"></div>');
 
 				// Only perform search if we entered a value
 				if (searchText.length > 0) {
