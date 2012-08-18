@@ -8,7 +8,7 @@
 // @icon           http://skratchdot.com/favicon.ico
 // @downloadURL    https://github.com/skratchdot/github-code-search.user.js/raw/master/github-code-search.user.js
 // @updateURL      https://github.com/skratchdot/github-code-search.user.js/raw/master/github-code-search.user.js
-// @version        1.2
+// @version        1.3
 // ==/UserScript==
 /*global jQuery */
 /*jslint browser: true */
@@ -100,6 +100,7 @@ var main = function () {
 										jQuery('<input />')
 											.attr('type', 'text')
 											.attr('placeholder', 'Search Source Code...')
+											.attr('style', 'border:1px solid #ccc;border-radius:3px;color:#666;height:24px;padding:0 5px;')
 									)
 									.append(
 										jQuery('<button />')
