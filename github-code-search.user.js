@@ -8,7 +8,7 @@
 // @icon           http://skratchdot.com/favicon.ico
 // @downloadURL    https://github.com/skratchdot/github-code-search.user.js/raw/master/github-code-search.user.js
 // @updateURL      https://github.com/skratchdot/github-code-search.user.js/raw/master/github-code-search.user.js
-// @version        1.3
+// @version        1.4
 // ==/UserScript==
 /*global jQuery */
 /*jslint browser: true */
@@ -24,7 +24,7 @@ var main = function () {
 	SKRATCHDOT.nameWithOwner = '';
 	SKRATCHDOT.getNameWithOwner = function () {
 		var returnValue = '',
-			repoLink = jQuery('div.site div.title-actions-bar h1:first a:eq(1)');
+			repoLink = jQuery('a.js-current-repository');
 		if (repoLink.length > 0) {
 			returnValue = repoLink.attr('href').substr(1);
 		}
@@ -65,19 +65,19 @@ var main = function () {
 
 	SKRATCHDOT.codeSearchInit = function () {
 		var siteContainer = jQuery('div.site div.container'),
-			repohead = siteContainer.find('div.repohead'),
+			repohead = siteContainer.find('div.tabnav'),
 			jsRepoPjaxContainer = jQuery('#js-repo-pjax-container'),
 			codeTabSelected,
 			tabsOnRight;
 		SKRATCHDOT.nameWithOwner = SKRATCHDOT.getNameWithOwner();
 		if (repohead.length > 0 && typeof SKRATCHDOT.nameWithOwner === 'string' && SKRATCHDOT.nameWithOwner.length > 0) {
 			// Do nothing if code tab isn't selected
-			codeTabSelected = repohead.find('div.tabnav > ul.tabnav-tabs li:first a.selected');
+			codeTabSelected = siteContainer.find('ul.tabs li:first a.selected');
 			if (codeTabSelected.length === 0) {
 				return;
 			}
 
-			tabsOnRight = repohead.find('div.tabnav > .tabnav-right ul');
+			tabsOnRight = repohead.find('.tabnav-right ul');
 
 			// Do nothing if there's already a search box
 			if (tabsOnRight.find('input[type=text]').length > 1) {
