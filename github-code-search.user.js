@@ -39,7 +39,7 @@ var main = function () {
 			type: 'GET',
 			data: {
 				type: 'Code',
-				repo: SKRATCHDOT.nameWithOwner,
+				repo: SKRATCHDOT.nameWithOwner.toLowerCase(),
 				q: searchText,
 				start_value: startValue
 			},
