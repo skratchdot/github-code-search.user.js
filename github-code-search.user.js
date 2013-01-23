@@ -8,7 +8,7 @@
 // @icon           http://skratchdot.com/favicon.ico
 // @downloadURL    https://github.com/skratchdot/github-code-search.user.js/raw/master/github-code-search.user.js
 // @updateURL      https://github.com/skratchdot/github-code-search.user.js/raw/master/github-code-search.user.js
-// @version        1.6
+// @version        1.7
 // ==/UserScript==
 /*global jQuery */
 /*jslint browser: true */
@@ -44,7 +44,7 @@ var main = function () {
 			},
 			success: function (data) {
 				try {
-					var resultHtml = jQuery(data).find('#code_search_results'),
+					var resultHtml = jQuery(data).find('#code_search_results, #repo-message'),
 						resultContainer = jQuery('#skratchdot-result-container');
 					resultContainer.html(resultHtml);
 
@@ -133,7 +133,13 @@ var main = function () {
 				if (searchText.length > 0) {
 					SKRATCHDOT.performCodeSearch(searchText, 1);
 				} else {
-					jQuery('#skratchdot-result-container').html('<div style="color:#c00;">Please enter a search term into the code search input, and try again.</div>');
+					jQuery('#skratchdot-result-container').html('<div id="repo-message">' +
+						'  <span class="mega-icon mega-icon-search-input"></span>' +
+						'  <h3>Please enter a search term into the code search input, and try again.</h3>' +
+						'  <p>' +
+						'    You could also try an <a href="https://github.com/search/advanced">advanced search</a>.' +
+						'  </p>' +
+						'</div>');
 				}
 
 			});
