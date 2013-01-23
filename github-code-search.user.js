@@ -8,7 +8,7 @@
 // @icon           http://skratchdot.com/favicon.ico
 // @downloadURL    https://github.com/skratchdot/github-code-search.user.js/raw/master/github-code-search.user.js
 // @updateURL      https://github.com/skratchdot/github-code-search.user.js/raw/master/github-code-search.user.js
-// @version        1.5
+// @version        1.6
 // ==/UserScript==
 /*global jQuery */
 /*jslint browser: true */
@@ -39,9 +39,8 @@ var main = function () {
 			type: 'GET',
 			data: {
 				type: 'Code',
-				repo: SKRATCHDOT.nameWithOwner.toLowerCase(),
-				q: searchText,
-				start_value: startValue
+				q: searchText + ' repo:' + SKRATCHDOT.nameWithOwner.toLowerCase(),
+				p: startValue
 			},
 			success: function (data) {
 				try {
@@ -49,12 +48,21 @@ var main = function () {
 						resultContainer = jQuery('#skratchdot-result-container');
 					resultContainer.html(resultHtml);
 
-					resultContainer.find('#code_search_results div.pagination a.pager_link').click(function (e) {
+					resultContainer.find('#code_search_results div.pagination a').click(function (e) {
+						var pageNumber, url, regex, results;
+
+						pageNumber = 1;
+						url = jQuery(this).attr('href');
+						regex = new RegExp('(.)*(search\\?p\\=)([0-9]+)', 'gi');
+						results = regex.exec(url);
+						if (results.length >= 4) {
+							pageNumber = parseInt(results[3], 10);
+						}
 
 						resultContainer.empty();
 
 						// Refresh with the results from the pagination
-						SKRATCHDOT.performCodeSearch(searchText, jQuery(this).text());
+						SKRATCHDOT.performCodeSearch(searchText, pageNumber);
 
 						e.preventDefault();
 					});
