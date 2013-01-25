@@ -8,7 +8,7 @@
 // @icon           http://skratchdot.com/favicon.ico
 // @downloadURL    https://github.com/skratchdot/github-code-search.user.js/raw/master/github-code-search.user.js
 // @updateURL      https://github.com/skratchdot/github-code-search.user.js/raw/master/github-code-search.user.js
-// @version        1.7
+// @version        1.8
 // ==/UserScript==
 /*global jQuery */
 /*jslint browser: true */
@@ -88,7 +88,7 @@ var main = function () {
 			tabsOnRight = repohead.find('.tabnav-right ul');
 
 			// Do nothing if there's already a search box
-			if (tabsOnRight.find('input[type=text]').length > 1) {
+			if (repohead.find('input[type=text]').length > 1) {
 				return;
 			}
 
