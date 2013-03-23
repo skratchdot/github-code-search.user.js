@@ -8,7 +8,7 @@
 // @icon           http://skratchdot.com/favicon.ico
 // @downloadURL    https://github.com/skratchdot/github-code-search.user.js/raw/master/github-code-search.user.js
 // @updateURL      https://github.com/skratchdot/github-code-search.user.js/raw/master/github-code-search.user.js
-// @version        1.9
+// @version        2.0
 // ==/UserScript==
 /*global jQuery */
 /*jslint browser: true */
@@ -45,7 +45,11 @@ var main = function () {
 			success: function (data) {
 				try {
 					var resultHtml = jQuery(data).find('#code_search_results, #repo-message'),
-						resultContainer = jQuery('#skratchdot-result-container');
+						resultContainer = jQuery('#skratchdot-result-container'),
+						reQuotes = new RegExp('([^\\\\])(\\")', 'g'),
+						newSearchText,
+						newSearchLink;
+
 					resultContainer.html(resultHtml);
 
 					resultContainer.find('#code_search_results div.pagination a').click(function (e) {
@@ -66,6 +70,22 @@ var main = function () {
 
 						e.preventDefault();
 					});
+
+					// search for unescaped quotes. if we find some, create a link
+					// that will re-try the search with escaped quotes
+					if (resultHtml.is('#repo-message') && searchText.match(reQuotes)) {
+						newSearchText = searchText.replace(reQuotes, function ($1, $2) {
+							return $2 + '\\"';
+						});
+						newSearchLink = jQuery('<a href="#">searching with escaped quotes</a>');
+						newSearchLink.click(function (e) {
+							e.preventDefault();
+							jQuery('#skratchdot-code-search').find('input:first').val(newSearchText);
+							SKRATCHDOT.performCodeSearch(newSearchText, 1);
+						});
+						jQuery('#repo-message').append('<h4>Your search contained unescaped quotes. You can also try:</h4>');
+						jQuery('#repo-message').append(newSearchLink);
+					}
 				} catch (e) {}
 			}
 		});
