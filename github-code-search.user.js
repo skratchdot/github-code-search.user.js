@@ -8,12 +8,12 @@
 // @icon           http://skratchdot.com/favicon.ico
 // @downloadURL    https://github.com/skratchdot/github-code-search.user.js/raw/master/github-code-search.user.js
 // @updateURL      https://github.com/skratchdot/github-code-search.user.js/raw/master/github-code-search.user.js
-// @version        2.0
+// @version        2.1
 // ==/UserScript==
 /*global jQuery */
 /*jslint browser: true */
 
-var main = function () {
+(function () {
 	'use strict';
 
 	// Declare a namespace to store functions in
@@ -170,9 +170,4 @@ var main = function () {
 	jQuery(document).ready(function () {
 		SKRATCHDOT.codeSearchInit();
 	});
-};
-
-// Inject our main script
-var script = document.createElement('script');
-script.textContent = '(' + main.toString() + ')();';
-document.body.appendChild(script);
+}());
