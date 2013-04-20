@@ -8,7 +8,7 @@
 // @icon           http://skratchdot.com/favicon.ico
 // @downloadURL    https://github.com/skratchdot/github-code-search.user.js/raw/master/github-code-search.user.js
 // @updateURL      https://github.com/skratchdot/github-code-search.user.js/raw/master/github-code-search.user.js
-// @version        2.1
+// @version        2.2
 // ==/UserScript==
 /*global jQuery */
 /*jslint browser: true */
@@ -100,7 +100,7 @@
 		SKRATCHDOT.nameWithOwner = SKRATCHDOT.getNameWithOwner();
 		if (repohead.length > 0 && typeof SKRATCHDOT.nameWithOwner === 'string' && SKRATCHDOT.nameWithOwner.length > 0) {
 			// Do nothing if code tab isn't selected
-			codeTabSelected = siteContainer.find('ul.tabs li:first a.selected');
+			codeTabSelected = siteContainer.find('ul.tabs li:eq(1) a.selected');
 			if (codeTabSelected.length === 0) {
 				return;
 			}
